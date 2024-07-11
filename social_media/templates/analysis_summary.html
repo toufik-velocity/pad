@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static  %}
+{% block content %}
+
+    <section class="section-urls" id="urls">
+        <div class="urls-container">
+            <!-- Nav Bar -->
+
+            <nav class="navbar navbar-expand-lg">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pad/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-analysis' %}">Analyze</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-summary' %}">Summary</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+
+               {% for summary in summaries %}
+            <div class="row">
+                <br/>
+                <div class="container">
+                    <br/>
+                    <br/>
+                    <h1>{{ summary.platform }}</h1>
+                </div>
+                <br/>
+                <br/>
+                <div class="container">
+                    <br/>
+                    <h5> (Extracted Text: {{ summary.data }}) </h5>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+        {#                <p style="align-content: center">(Extracted Text: {{ text }})</p>#}
+                <div class="container">
+                    <div class="row">
+                      <div class="col-sm">
+                          <h5>{{ summary.mbti }}</h5>
+                        <img src="{% static summary.plot_file_mbti %}" class="img-fluid" alt="MBTI">
+                      </div>
+                      <div class="col-sm">
+                          <h5>{{ summary.ocean }}</h5>
+                        <img src="{% static summary.plot_file_ocean %}" class="img-fluid" alt="OCEAN">
+                      </div>
+                    </div>
+                  </div>
+            </div>
+    {% endfor %}
+
+
+        </div>
+
+    </section>
+
+
+{% endblock content %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static  %}
+{% load custom_filters %}
+
+
+{% block link %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+{% endblock link %}
+
+{% block content %}
+
+        <!-- Analysis Name-->
+
+
+    <section class="section-name" , id="analyze">
+        <div class="middle-container">
+            <!-- Nav Bar -->
+
+            <nav class="navbar navbar-expand-lg">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pad/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-analysis' %}">Analyze</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-summary' %}">Summary</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+
+            <section class="content">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                            <h4 class="card-title paste-heading">Summary</h4>
+                      </div>
+                      <!-- /.card-header -->
+                      <div class="card-body">
+                          <a class="btn btn-primary" href="{% url 'pad-analysis' %}"> New Analysis </a>
+                        <table id="example1" class="table table-bordered table-striped">
+                          <thead>
+                          <tr>
+                            <th>Analysis Name</th>
+                            <th>Facebook</th>
+                            <th>Twitter</th>
+                            <th>Instagram</th>
+                            <th>LinkedIn</th>
+                            <th>YouTube</th>
+                            <th>TikTok</th>
+                            <th>Website</th>
+                            <th>Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            {% for analysis_row in analysis_data %}
+                                <tr>
+                                  <td> <a href="{% url 'analysis_summary' analysis_row.analysis.pk %}"> {{ analysis_row.analysis.name }} </a> </td>
+                                    {% for content_type in content_types %}
+                                        <td><input type="checkbox" disabled {% if analysis_row.checkboxes|get_value:content_type %}checked{% endif %}></td>
+                                    {% endfor %}
+                                  <td>
+                                      <a class="btn btn-secondary" href="{% url 'edit_analysis' analysis_row.analysis.pk %}">Edit</a>
+                                      <a class="btn btn-danger" href="#" onclick="confirmDelete('{{ analysis_row.analysis.pk }}')">Delete</a>
+                                  </td>
+                                </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- /.container-fluid -->
+            </section>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Main content -->
+    <!-- /.content -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script>
+     function confirmDelete(analysisId) {
+        if (confirm('Are you sure you want to delete this analysis?')) {
+          // Redirect to the delete URL
+          window.location.href = "{% url 'delete_analysis' 0 %}".replace('0', analysisId);
+        }
+     }
+    </script>
+{% endblock content %}

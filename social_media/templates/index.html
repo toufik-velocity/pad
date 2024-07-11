@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <!-- Home Page -->
+    <section class="section-heading" id="home">
+        <div class="top-container">
+
+            <h1 class="big-heading">Personality Analytics Dashboard</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">What is PAD?</h3>
+                    <p class="card-text">PAD stands for Personality Analytics Dashboard, is a tool that allows you to
+                        perform MBTI and OCEAN personality analysis based on social media posts. The supported social
+                        platforms are Facebook, Twitter, LinkedIn, Instagram, TikTok and YouTube.</p>
+                    <div class="button-container">
+                        <a href="{% url 'pad-analysis' %}" class="btn btn-primary">Start</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

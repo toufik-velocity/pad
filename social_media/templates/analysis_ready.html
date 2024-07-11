@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% block link %}
+        <style>
+         .loader {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          {#display: flex;#}
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+
+        .loader-inner {
+          width: 80px;
+          height: 80px;
+          display: flex;
+          justify-content: space-between;
+          animation: rotate 1.5s infinite linear;
+        }
+
+        .loader-element {
+          width: 20px;
+          height: 20px;
+          background-color: #fff;
+          border-radius: 50%;
+          animation: loader 1.5s infinite linear;
+        }
+
+        .loader-element:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .loader-element:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        .loader-element:nth-child(4) {
+          animation-delay: 0.6s;
+        }
+
+        @keyframes loader {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(0.5);
+            opacity: 0.5;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+    </style>
+{% endblock link %}
+{% block content %}
+    {% load static %}
+
+        <!-- Post URLS -->
+
+    <section class="section-urls" id="urls">
+        <div class="urls-container">
+            <!-- Nav Bar -->
+
+            <nav class="navbar navbar-expand-lg">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pad/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-analysis' %}">Analyze</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-summary' %}">Summary</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+
+
+            <!-- Text area -->
+
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <h4 class="paste-heading">{{ analysis }}</h4>
+                </div>
+            </div>
+            <div class="card w-50 mx-auto">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#urls">URLS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#paste-link">Paste Text</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div class="card-body" id="card-body-urls">
+                    <div class="container text-center">
+                        <form method="post" id="myFormUrl" action="{% url 'pad-analysis-process' %}">
+                            {% csrf_token %}
+                            <h5 class="card-title">URL Post</h5>
+                            <p class="card-text"> E.g. "https://www.facebook.com/post//id"</p>
+                            <input class="form-control form-control-sm" type="text" name="post-url"
+                                placeholder="https://www.facebook.com/cnninternational/post"
+                                aria-label=".form-control-sm example" required>
+                            <div class="d-grid gap-2 d-md-block">
+                                <input type="submit" value="Analyze" class="btn btn-primary"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-body" id="card-body-paste-link" style="display: none;">
+                    <div class="container text-center">
+                        <form method="post" id="myForm" action="{% url 'pad-analysis-process' %}">
+                            {% csrf_token %}
+                            <div class="row justify-content-center">
+                                <div class="col">
+                                    <h5 class="card-title">Paste a text</h5>
+                                </div>
+{#                                <div class="col-md-auto">#}
+{#                                    <p class="card-text">Paste social media post#}
+{#                                        here</p>#}
+{#                                </div>#}
+
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Choose Platforms
+                                            </button>
+                                            <input type="hidden" id="socialmedia" name="platform">
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('Facebook')">Facebook</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('Twitter')">Twitter</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('LinkedIn')">LinkedIn</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('Instagram')">Instagram</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('TikTok')">TikTok</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('YouTube')">YouTube</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateButtonText('Website')">Website</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center">
+                                <div class="col">
+                                    <textarea type="textarea" class="form-control" id="exampleFormControlTextarea1"
+                                              rows="3" name="post-text"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-center">
+                                <div class="col">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <input type="submit" value="Analyze" class="btn btn-primary"/>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <br/>
+                <div class="container">
+                    <br/>
+                    <br/>
+                    <h1>{{ platform }}</h1>
+                </div>
+                <br/>
+                <br/>
+                <div class="container">
+                    <br/>
+                    <h5> (Extracted Text: {{ text }}) </h5>
+                    <br/>
+                    <br/>
+                    <br/>
+                </div>
+{#                <p style="align-content: center">(Extracted Text: {{ text }})</p>#}
+                <div class="container">
+                    <div class="row">
+                      <div class="col-sm">
+                          <h5>{{ mbti }}</h5>
+                        <img src="{% static 'mbti.png' %}" class="img-fluid" alt="MBTI">
+                      </div>
+                      <div class="col-sm">
+                          <h5>{{ ocean }}</h5>
+                        <img src="{% static 'ocean.png' %}" class="img-fluid" alt="OCEAN">
+                      </div>
+                    </div>
+                  </div>
+{#                <img src="{% static 'mbti.png' %}" class="rounded float-start" alt="MBTI">#}
+{#                <img src="{% static 'ocean.png' %}" class="rounded float-end" alt="OCEAN">#}
+            </div>
+
+        </div>
+
+    </section>
+    <div class="loader" style="display: none" id="loader">
+        <div class="loader-inner">
+          <div class="loader-element"></div>
+          <div class="loader-element"></div>
+          <div class="loader-element"></div>
+          <div class="loader-element"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add an event listener to the form submission
+            document.getElementById('myForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                // console.log("submission");
+
+                var form = document.getElementById('myForm');
+                var formData = new FormData(form);
+                var loader = document.querySelector('.loader');
+                loader.style.display = 'flex'; // Display the loader
+
+                // Create a new XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                console.log("test");
+                // Configure the request
+                xhr.open('POST', form.action);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                // Set up the onload event handler
+                xhr.onreadystatechange = function() {
+                  if(xhr.readyState === XMLHttpRequest.DONE ){
+                      if (xhr.status === 200 ) {
+                          // Request was successful
+                          var responseData = JSON.parse(xhr.response);
+                            let characterToRemove = "&";
+                            var originalString = responseData.text;
+                            var replacedText = originalString.replace(/[^\w\s]/g, ' ');
+                            let new_mbti = responseData.mbti.replace(characterToRemove, "");
+                            let new_ocean = responseData.ocean.replace(characterToRemove, "");
+                          // Redirect to the analysis_ready page
+                          window.location.href = "{% url 'pad-analysis-ready' %}?mbti=" + new_mbti + "&ocean=" + new_ocean + "&analysis=" + responseData.analysis + "&text=" + replacedText + "&mbtifile=" + responseData.mbitfile + "&oceanfile=" + responseData.oceanfile + "&platform=" + responseData.platform;
+
+                          // Hide the loader
+                          loader.style.display = 'none';
+                        } else {
+                          // Request failed
+                          // Hide the loader
+                          loader.style.display = 'none';
+                          alert("Something went wrong!");
+                          console.error('Request failed with status:', xhr.status);
+                        }
+                      }
+                };
+
+                // Set up the onerror event handler
+                xhr.onerror = function() {
+                    // Hide the loader
+                          loader.style.display = 'none';
+                          alert("Something went wrong!");
+                    console.error('Request failed.');
+                };
+
+                // Send the form data
+                xhr.send(formData);
+        });
+      });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add an event listener to the form submission
+            document.getElementById('myFormUrl').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                // console.log("submission");
+
+                var form = document.getElementById('myFormUrl');
+                var formData = new FormData(form);
+                var loader = document.querySelector('.loader');
+                loader.style.display = 'flex'; // Display the loader
+
+                // Create a new XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                console.log("test url");
+                // Configure the request
+                xhr.open('POST', form.action);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                // Set up the onload event handler
+                xhr.onreadystatechange = function() {
+                  if(xhr.readyState === XMLHttpRequest.DONE ){
+                      if (xhr.status === 200 ) {
+                          // Request was successful
+                          var responseData = JSON.parse(xhr.response);
+                            let characterToRemove = "&";
+                            let new_mbti = responseData.mbti.replace(characterToRemove, "");
+                            let new_ocean = responseData.ocean.replace(characterToRemove, "");
+                          // Redirect to the analysis_ready page
+                          window.location.href = "{% url 'pad-analysis-ready' %}?mbti=" + new_mbti + "&ocean=" + new_ocean + "&analysis=" + responseData.analysis + "&text=" + responseData.text + "&mbtifile=" + responseData.mbitfile + "&oceanfile=" + responseData.oceanfile + "&platform=" + responseData.platform;
+                          // Hide the loader
+                          loader.style.display = 'none';
+                        } else {
+                          // Request failed
+                          // Hide the loader
+                          loader.style.display = 'none';
+                          alert("Something went wrong!");
+                          console.error('Request failed with status:', xhr.status);
+                        }
+                      }
+                };
+
+                // Set up the onerror event handler
+                xhr.onerror = function() {
+                    // Hide the loader
+                          loader.style.display = 'none';
+                          alert("Something went wrong!");
+                    console.error('Request failed.');
+                };
+
+                // Send the form data
+                xhr.send(formData);
+        });
+      });
+
+        function updateButtonText(selectedPlatform) {
+            // Get the dropdown button element
+            const dropdownButton = document.getElementById('dropdownMenuButton1');
+
+            //get the hidden social media input
+            const socialmedia = document.getElementById('socialmedia');
+
+            // Update the button text with the selected platform
+            dropdownButton.textContent = selectedPlatform;
+
+             //update the hidden social media input value
+            socialmedia.value = selectedPlatform;
+        }
+
+
+        // Add event listener to the "Paste Link" tab
+        document.querySelector('a[href="#paste-link"]').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default navigation behavior
+
+            // Show the "Paste Link" content
+            document.getElementById('card-body-urls').style.display = 'none';
+            document.getElementById('card-body-paste-link').style.display = 'block';
+        });
+        document.querySelector('a[href="#urls"]').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default navigation behavior
+
+            // Show the "Paste Link" content
+            document.getElementById('card-body-urls').style.display = 'block';
+            document.getElementById('card-body-paste-link').style.display = 'none';
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.forEach(link => {
+              link.classList.remove('active');
+            });
+            link.classList.add('active');
+          });
+        });
+
+    </script>
+{% endblock content %}

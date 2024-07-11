@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <!-- Analysis Name-->
+
+
+    <section class="section-name" , id="analyze">
+        <div class="middle-container">
+            <!-- Nav Bar -->
+
+            <nav class="navbar navbar-expand-lg">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pad/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-analysis' %}">Analyze</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pad-summary' %}">Summary</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+
+
+            <!-- Name Input -->
+
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <h4 class="analysis-heading">Analysis Name</h4>
+                    <form method="post" action="{% url 'pad-entries' %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <input type="text" name="analysis-name" class="form-control-lg" aria-label="Sizing example input"
+                                aria-describedby="inputGroup-sizing-default" placeholder="E.g. John Doe" required>
+                        </div>
+                        <input type="submit" value="Create" class="btn btn-outline-secondary"/>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock content %}
